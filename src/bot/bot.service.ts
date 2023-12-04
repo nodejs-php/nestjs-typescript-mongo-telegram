@@ -4,6 +4,7 @@ import TelegramBot = require('node-telegram-bot-api');
 import {CalculatorService} from './calculator/calculator.service';
 import {ExpressionService} from "./schemas/expression.service";
 import {ExpressionDto} from "./schemas/expression.dto";
+import {Expression} from './schemas/expression.schema';
 
 config();
 
@@ -18,7 +19,6 @@ export class BotService implements OnModuleInit {
 
     botMessage() {
         process.env.NTBA_FIX_319 = '1';
-        console.log(process.env.TELEGRAM_TOKEN);
         const token = process.env.TELEGRAM_TOKEN;
         const bot: TelegramBot = new TelegramBot(token, {polling: true});
 
@@ -28,7 +28,9 @@ export class BotService implements OnModuleInit {
       /echo [Что-нибудь] - для вывода текста в Telegram
       /help - для помощи
       /calculate [математическое выражение, с использованием ()/*^/-+] - для вычисления значения выражения, например, /calculate (4*7)+6^2 
-      /expressions add [математическое выражение]
+      /expressions add [математическое выражение]  - для добавления выражения в БД
+      /expressions list  - Для автоматического просмотра добавленных выражений
+      /expressions clear  - Для удаления всех выражений
       `;
             bot.sendMessage(chatId, help);
         });
@@ -69,6 +71,26 @@ export class BotService implements OnModuleInit {
 
                         bot.sendMessage(chatId, 'Выражение добавлено. ');
                     }
+                }
+
+                if (command.indexOf('clear') === 0) {
+                    this.expressionService.clear();
+                    bot.sendMessage(chatId, 'Выражения удалены. ');
+                }
+
+                if (command.indexOf('list') === 0) {
+                    const expressions: Promise<Expression[]> = this.expressionService.findAll();
+                    console.log(expressions);
+                    expressions.then((collections: Expression[]) => {
+                            collections.forEach((exp: Expression) => {
+                                console.log(exp);
+                                const result: string = this.calculatorService
+                                    .calculate(exp.expression)
+                                    .toString();
+                                bot.sendMessage(chatId, exp.expression + ' = ' + result);
+                            })
+                        }
+                    );
                 }
             },
         );
