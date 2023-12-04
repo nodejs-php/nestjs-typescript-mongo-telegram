@@ -7,6 +7,7 @@ export class AppController {
 
   @Get()
   getBotDialog(@Res() res) {
+    console.log(res);
     res.status(HttpStatus.OK).send('Сервис бота запущен');
   }
 }
