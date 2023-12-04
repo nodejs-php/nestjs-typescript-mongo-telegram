@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { Calculator } from '../calculator.dto';
+import { Calculator } from './calculator.dto';
 
 @Injectable()
 export class CalculatorService {

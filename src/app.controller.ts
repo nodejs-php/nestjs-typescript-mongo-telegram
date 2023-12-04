@@ -1,5 +1,5 @@
 import { Get, Controller, Res, HttpStatus } from '@nestjs/common';
-import { BotService } from './bot/services/bot.service';
+import { BotService } from './bot/bot.service';
 
 @Controller()
 export class AppController {
@@ -7,7 +7,6 @@ export class AppController {
 
   @Get()
   getBotDialog(@Res() res) {
-    this.botService.botMessage();
     res.status(HttpStatus.OK).send('Сервис бота запущен');
   }
 }
