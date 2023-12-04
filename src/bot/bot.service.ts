@@ -24,7 +24,7 @@ export class BotService implements OnModuleInit {
       const help: string = `Команды:
       /echo [Что-нибудь] - для вывода текста в Telegram
       /help - для помощи
-      /calculate [число][операция][число] - для вычисления значения выражения, например, /calculate 4*7
+      /calculate [число][операция][число] - для вычисления значения выражения, например, /calculate (4*7)+6^2 
       `;
       bot.sendMessage(chatId, help);
     });
@@ -33,11 +33,17 @@ export class BotService implements OnModuleInit {
       /\/calculate (.+)/,
       (msg: TelegramBot.Message, match: RegExpMatchArray) => {
         const chatId = msg.chat.id;
-        const expression = match[1];
-        const result: string = this.calculatorService
-          .calculate(expression)
-          .toString();
-        bot.sendMessage(chatId, 'Результат: ' + result);
+        const expression: string = match[1];
+        const msgError: string = this.calculatorService.validate(expression);
+
+        if (msgError) {
+          bot.sendMessage(chatId, msgError);
+        } else {
+          const result: string = this.calculatorService
+            .calculate(expression)
+            .toString();
+          bot.sendMessage(chatId, 'Результат: ' + result);
+        }
       },
     );
   }
