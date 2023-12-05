@@ -25,13 +25,13 @@ export class BotService implements OnModuleInit {
         bot.onText(/\/(start)|(help)/, (msg: TelegramBot.Message) => {
             const chatId = msg.chat.id;
             const help: string = `Команды:
-      /echo [Что-нибудь] - для вывода текста в Telegram
-      /help - для помощи
-      /calculate [математическое выражение, с использованием ()/*^/-+] - для вычисления значения выражения, например, /calculate (4*7)+6^2 
-      /expressions add [математическое выражение]  - для добавления выражения в БД
-      /expressions list  - Для автоматического просмотра добавленных выражений
-      /expressions clear  - Для удаления всех выражений
-      `;
+                /echo [Что-нибудь] - для вывода текста в Telegram
+                /help - для помощи
+                /calculate [математическое выражение, с использованием ()/*^/-+] - для вычисления значения выражения, например, /calculate (4*7)+6^2 
+                /expressions add [математическое выражение]  - для добавления выражения в БД
+                /expressions list  - Для автоматического просмотра добавленных выражений
+                /expressions clear  - Для удаления всех выражений
+            `;
             bot.sendMessage(chatId, help);
         });
 
